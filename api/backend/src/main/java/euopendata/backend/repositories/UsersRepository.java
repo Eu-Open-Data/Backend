@@ -21,4 +21,16 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
     @Query("UPDATE Users a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableAppUser(String email);
+
+    @Query("SELECT u.email FROM Users u WHERE u.id=?1")
+    String getEmailById(Long id);
+
+    @Query("SELECT u.firstName FROM Users u WHERE u.id=?1")
+    String getFirstNameById(Long id);
+
+    @Query("SELECT u.lastName FROM Users u WHERE u.id=?1")
+    String getLastNameById(Long id);
+
+    @Query("SELECT u.username FROM Users u WHERE u.id=?1")
+    String getUsernameById(Long id);
 }

@@ -36,26 +36,25 @@ public class UsersService implements UserDetailsService {
         this.resetPasswordTokenService = resetPasswordTokenService;
     }
 
-    public String getUsernameLogged() throws RuntimeException{
+
+    public String getUsernameLogged() throws RuntimeException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
-        if(principal instanceof UserDetails){
+        if (principal instanceof UserDetails) {
             Users userDetails = (Users) principal;
             return userDetails.getUsername();
-        }
-        else throw new RuntimeException("Error getting username");
+        } else throw new RuntimeException("Error getting username");
     }
 
     public String getEmailLogged() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
-        if(principal instanceof UserDetails){
+        if (principal instanceof UserDetails) {
             Users userDetails = (Users) principal;
             return userDetails.getEmail();
-        }
-        else throw new RuntimeException("Error getting email");
+        } else throw new RuntimeException("Error getting email");
     }
 
     public Users getUserByEmail(String email) {
@@ -66,15 +65,14 @@ public class UsersService implements UserDetailsService {
         usersRepository.save(user);
     }
 
-    public ResponseEntity<String> signUpUser(Users user)
-    {
+    public ResponseEntity<String> signUpUser(Users user) {
         boolean userExists = usersRepository.findByEmail(user.getEmail()).isPresent();
-        if(userExists){
+        if (userExists) {
             return ResponseEntity.badRequest().body("Email already used!");
         }
 
         boolean usernameExists = usersRepository.findByUsername(user.getUsername()).isPresent();
-        if(usernameExists){
+        if (usernameExists) {
             return ResponseEntity.badRequest().body("Username already used!");
         }
 
@@ -84,7 +82,7 @@ public class UsersService implements UserDetailsService {
         usersRepository.save(user);
 
         String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken= new ConfirmationToken(
+        ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
@@ -110,11 +108,39 @@ public class UsersService implements UserDetailsService {
         return usersRepository.findById(id).orElse(null);
     }
 
-    public String getEmailById(Long id) {
-        return usersRepository.findById(id).get().getEmail();
-    }
-
     public void createResetPasswordToken(Users user, String passwordToken) {
         resetPasswordTokenService.createResetPasswordTokenForUser(user, passwordToken);
+    }
+
+    public String getFirstNameById(Long id) {
+        boolean exists = usersRepository.existsById(id);
+        if (!exists) {
+            throw new IllegalStateException("user with id " + id + " does not exist");
+        }
+        return usersRepository.getFirstNameById(id);
+    }
+
+    public String getUsernameById(Long id) {
+        boolean exists = usersRepository.existsById(id);
+        if (!exists) {
+            throw new IllegalStateException("user with id " + id + " does not exist");
+        }
+        return usersRepository.getUsernameById(id);
+    }
+
+    public String getLastNameById(Long id) {
+        boolean exists = usersRepository.existsById(id);
+        if (!exists) {
+            throw new IllegalStateException("user with id " + id + " does not exist");
+        }
+        return usersRepository.getLastNameById(id);
+    }
+
+    public String getEmailById(Long id) {
+        boolean exists = usersRepository.existsById(id);
+        if(!exists) {
+            throw new IllegalStateException("user with id " + id + " does not exist");
+        }
+        return usersRepository.getEmailById(id);
     }
 }

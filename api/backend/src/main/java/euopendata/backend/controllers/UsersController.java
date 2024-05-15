@@ -27,5 +27,22 @@ public class UsersController {
         return usersService.getEmailLogged();
     }
 
+    @GetMapping("{id}/firstName")
+    public String getFirstNameById(@PathVariable ("id") Long id) {
+        return usersService.getFirstNameById(id);
+    }
+    @GetMapping("{id}/lastName")
+    public String getLastNameById(@PathVariable ("id") Long id) {
+        return usersService.getLastNameById(id);
+    }
+    @GetMapping("{id}/email")
+    public String getEmailById(@PathVariable ("id") Long id){
+        return usersService.getEmailById(id);
+    }
+
+    @GetMapping("{id}/username")
+    public String getUsernameById(@PathVariable ("id") Long id){
+        return usersService.getUsernameById(id);
+    }
 
 }
