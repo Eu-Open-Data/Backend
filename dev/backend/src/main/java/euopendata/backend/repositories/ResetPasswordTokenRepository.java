@@ -24,8 +24,13 @@ public interface ResetPasswordTokenRepository
             "WHERE r.token = ?1")
     int updateResetAt(String token, LocalDateTime now);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM ResetPasswordToken t " +
+            "WHERE t.token = ?1")
     void deleteByToken(String token);
 
+    @Transactional
     @Modifying
     @Query("DELETE FROM ResetPasswordToken t " +
             "WHERE t.user.email = ?1")

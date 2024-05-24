@@ -19,7 +19,7 @@ public class ResetPasswordService {
     private final EmailSender emailSender;
 
     public String processPasswordResetRequest(ForgotPasswordRequest request) {
-        System.out.println(request.getEmail());
+//        System.out.println(request.getEmail());
         Users user = usersService.getUserByEmail(request.getEmail());
         if (user == null) {
             System.out.println("user not found!");
@@ -45,7 +45,7 @@ public class ResetPasswordService {
         user.setPassword(newPassword);
         usersService.updateUser(user);
 
-        resetPasswordTokenService.deleteToken(token);
+        resetPasswordTokenService.deleteToken(token); 
         return "Password reset successfully.";
     }
 
