@@ -19,16 +19,9 @@ public class ConfirmationTokenService {
     public Optional<ConfirmationToken> getToken(String token) {
         return confirmationTokenRepository.findByToken(token);
     }
-    public Optional<ConfirmationToken> getToken(Long id) {
-        return confirmationTokenRepository.findById(id);
-    }
 
     public int setConfirmedAt(String token) {
         return confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
-    }
-
-    public void deleteToken(ConfirmationToken confirmationToken) {
-        confirmationTokenRepository.delete(confirmationToken);
     }
 }

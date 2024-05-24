@@ -22,15 +22,10 @@ public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
     private String lastName;
-    @Column(nullable = false)
     private String email;
-    @Column(nullable = false)
     private String username;
-    @Column(nullable = false)
     private String password;
     private Boolean locked = false;
     private Boolean enabled = false;
@@ -39,8 +34,6 @@ public class Users implements UserDetails {
     }
 
     public Users(String firstName, String lastName, String email, String username, String password) {
-        if(username.isEmpty() || password.isEmpty() || email.isEmpty() || firstName.isEmpty() || lastName.isEmpty())
-            throw new IllegalArgumentException("All fields are required");
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
