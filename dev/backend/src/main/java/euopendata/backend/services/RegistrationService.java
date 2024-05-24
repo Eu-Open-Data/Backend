@@ -7,12 +7,10 @@ import euopendata.backend.models.Users;
 import euopendata.backend.models.requests.RegistrationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,9 +36,9 @@ public class RegistrationService {
                 )
         );
         if(token.getStatusCode().is2xxSuccessful()) {
-            String link = "http://localhost:8081/registration/confirm?token=" + token.getBody();
+            String link = "https://localhost:8081/registration/confirm?token=" + token.getBody();
             emailSender.send(request.getEmail(),
-                   buildEmail("user", link)
+                   link
             );
         }
         return token;
@@ -72,36 +70,7 @@ public class RegistrationService {
                 confirmationToken.getUser().getEmail()
         );
         System.out.println(confirmationToken.getUser().getEmail());
-        confirmationTokenService.setConfirmedAt(token);
         return "confirmed";
-    }
-    public String resendEmailConfirmation(Long id) {
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(id)
-                .orElseThrow(()->
-                        new IllegalStateException("token not found"));
-
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-        
-        if(!expiredAt.isBefore(LocalDateTime.now()))
-            throw new IllegalStateException("token didn't expire");
-        confirmationTokenService.deleteToken(confirmationToken);
-        Users user = usersService.getUserById(id);
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken newConfirmationToken= new ConfirmationToken(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(15),
-                user
-        );
-        confirmationTokenService.saveConfirmationToken(newConfirmationToken);
-
-        String link = "https://localhost:8081/registration/confirm?token=" + confirmationToken.getToken();
-        emailSender.send(usersService.getEmailById(id),
-                    buildEmail(user.getFirstName(),link)
-            );
-
-        return token;
     }
     private String buildEmail(String name, String link) {
         return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
@@ -536,7 +505,6 @@ public class RegistrationService {
                 ""+
                 "</html>";
     }
-
 
 
 }
