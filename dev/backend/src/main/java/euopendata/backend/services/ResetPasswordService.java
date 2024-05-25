@@ -29,7 +29,7 @@ public class ResetPasswordService {
         String passwordToken = UUID.randomUUID().toString();
         usersService.createResetPasswordToken (user, passwordToken);
 
-        String resetLink = "https://localhost:8081/reset-password/request?token=" + passwordToken;
+        String resetLink = "https://localhost:8081/reset-password/confirm?token=" + passwordToken;
         emailSender.send(request.getEmail(), "Click the link to reset your password: " + resetLink);
         return resetLink;
     }
