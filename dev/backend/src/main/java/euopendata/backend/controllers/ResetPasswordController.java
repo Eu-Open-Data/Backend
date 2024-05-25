@@ -18,14 +18,12 @@ public class ResetPasswordController {
 
     @PostMapping("/request")
     public ResponseEntity<String> requestPasswordReset(@RequestBody ForgotPasswordRequest request) {
-        System.out.println("in controller!");
-
-        String resetPasswordUrl =
+    	String resetPasswordUrl =
                 resetPasswordService.processPasswordResetRequest(request);
         return ResponseEntity.ok("Password reset email sent successfully.");
     }
 
-    @PostMapping("/confirm")
+    @PutMapping("/confirm")
     public ResponseEntity<String> confirmResetToken(@RequestParam("token") String token, @RequestParam("password") String password) {
         String response =
                 resetPasswordService.confirmPasswordReset(token, password);

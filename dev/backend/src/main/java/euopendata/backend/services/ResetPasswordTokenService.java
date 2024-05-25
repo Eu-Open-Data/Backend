@@ -18,11 +18,13 @@ public class ResetPasswordTokenService {
     private final ResetPasswordTokenRepository resetPasswordTokenRepository;
 
     public void createResetPasswordTokenForUser (Users user, String password) {
+        System.out.println("in rst pass token service token is: " + password);
         ResetPasswordToken resetPasswordToken = new ResetPasswordToken(password,
                                                                         LocalDateTime.now(),
-                                                                        LocalDateTime.now().plusMinutes(10),
+                                                                        LocalDateTime.now().plusMinutes(15),
                                                                         user);
         resetPasswordTokenRepository.save(resetPasswordToken);
+        System.out.println("s-a salvat token-ul");
     }
 
     public String validateResetPasswordToken (String token) {
@@ -30,8 +32,9 @@ public class ResetPasswordTokenService {
         if (resetPasswordToken.isEmpty())
             return "Invalid reset password token";
 
+//        System.out.println("Expira la " + resetPasswordToken.get().getExpiresAt());
         Users user = resetPasswordToken.get().getUser();
-        if (resetPasswordToken.get().getExpiresAt().isAfter(LocalDateTime.now()))
+        if (resetPasswordToken.get().getExpiresAt().isBefore(LocalDateTime.now()))
             return "Your reset password link has expired";
         return "token valid";
     }
