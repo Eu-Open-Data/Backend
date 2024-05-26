@@ -29,5 +29,11 @@ public class HotelController {
         return hotelService.getHotelHistory();
     }
 
+    @GetMapping("/all")
+    public List<Hotel> getAllHotels()
+    {
+        return hotelService.getAllHotels();
+    }
+
 
 }
