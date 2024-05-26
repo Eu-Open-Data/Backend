@@ -31,18 +31,19 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/registration/**", "/authentication/**", "/reset-password/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated())
+                        .requestMatchers("/registration/**", "/authentication/**", "/reset-password/**")
+                        .authenticated()
+                        .anyRequest()
+                        .permitAll()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }
