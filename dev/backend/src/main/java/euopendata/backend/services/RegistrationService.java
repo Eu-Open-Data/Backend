@@ -36,9 +36,9 @@ public class RegistrationService {
                 )
         );
         if(token.getStatusCode().is2xxSuccessful()) {
-            String link = "https://localhost:8081/registration/confirm?token=" + token.getBody();
+            String link = "http://54.167.96.255:8081/auth/confirm?token=" + token.getBody();
             emailSender.send(request.getEmail(),
-                   link
+                   buildEmail(request.getFirstName(), link)
             );
         }
         return token;

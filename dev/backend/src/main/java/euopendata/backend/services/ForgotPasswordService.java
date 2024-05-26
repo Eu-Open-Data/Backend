@@ -30,7 +30,7 @@ public class ForgotPasswordService {
         ResetPasswordToken resetToken = new ResetPasswordToken(token, createdAt, expiresAt, user);
         resetPasswordTokenService.saveConfirmationToken(resetToken);
 
-        String resetUrl = "https://localhost:8081/reset-password?token=" + token;
+        String resetUrl = "https://54.167.96.255:8081/reset-password?token=" + token;
         emailSender.send(email, "Click the following link to reset your password: " + resetUrl);
     }
 }

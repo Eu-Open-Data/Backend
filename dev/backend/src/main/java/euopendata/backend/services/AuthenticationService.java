@@ -8,6 +8,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -16,12 +21,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request)
-    {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
 
         var user = usersRepository.findByUsername(request.getUsername()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
@@ -29,4 +32,6 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+
+
 }
