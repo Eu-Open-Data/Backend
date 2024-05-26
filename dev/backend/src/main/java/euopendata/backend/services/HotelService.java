@@ -31,4 +31,8 @@ public class HotelService {
     public List<Hotel> getHotelHistory() {
         return hotelRepository.getHotelHistory();
     }
+
+    public List<Hotel> getAllHotels() {
+        return hotelRepository.getAllHotels();
+    }
 }
