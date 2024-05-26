@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UsersController {
 
     private final UsersService usersService;
@@ -15,23 +15,23 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @GetMapping("{id}/firstName")
-    public String getFirstNameById(@PathVariable ("id") Long id){
+    @GetMapping("{token}/firstName")
+    public String getFirstNameById(@PathVariable ("token") Long id){
         return usersService.getFirstNameById(id);
     }
 
-    @GetMapping("{id}/lastName")
-    public String getLastNameById(@PathVariable ("id") Long id){
+    @GetMapping("{token}/lastName")
+    public String getLastNameById(@PathVariable ("token") Long id){
         return usersService.getLastNameById(id);
     }
 
-    @GetMapping("{id}/email")
-    public String getEmailById(@PathVariable ("id") Long id){
+    @GetMapping("{token}/email")
+    public String getEmailById(@PathVariable ("token") Long id){
         return usersService.getEmailById(id);
     }
 
-    @GetMapping("{id}/username")
-    public String getUsernameById(@PathVariable ("id") Long id){
+    @GetMapping("{token}/username")
+    public String getUsernameById(@PathVariable ("token") Long id){
         return usersService.getUsernameById(id);
     }
 }

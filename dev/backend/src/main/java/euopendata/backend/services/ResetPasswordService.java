@@ -4,6 +4,7 @@ import euopendata.backend.email.EmailSender;
 import euopendata.backend.models.ResetPasswordToken;
 import euopendata.backend.models.Users;
 import euopendata.backend.models.requests.ForgotPasswordRequest;
+import euopendata.backend.security.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class ResetPasswordService {
         String passwordToken = UUID.randomUUID().toString();
         usersService.createResetPasswordToken (user, passwordToken);
 
-        String resetLink = "https://localhost:8081/reset-password/confirm?token=" + passwordToken;
+        String resetLink = "http://54.167.96.255:8081/reset-password/confirm?token=" + passwordToken;
         emailSender.send(request.getEmail(), "Click the link to reset your password: " + resetLink);
         return resetLink;
     }
@@ -42,7 +43,9 @@ public class ResetPasswordService {
 
         Optional<ResetPasswordToken> resetToken = resetPasswordTokenService.getToken(token);
         Users user = resetToken.get().getUser();
-        user.setPassword(newPassword);
+        PasswordEncoder passwordEncoder = new PasswordEncoder(newPassword);
+        user.setPassword(passwordEncoder.getPassword());
+        user.setEnabled(true);
         usersService.updateUser(user);
 
         resetPasswordTokenService.deleteToken(token); 
