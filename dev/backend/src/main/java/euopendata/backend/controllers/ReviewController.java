@@ -20,4 +20,8 @@ public class ReviewController {
         reviewService.addReview(review);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteReview(@PathVariable int id) {
+        reviewService.deleteReview(id);
+    }
 }
