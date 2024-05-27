@@ -14,6 +14,20 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "url")
-    private 
+    @Column(name = "url", length = Integer.MAX_VALUE)
+    private String url;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
+
+
+	public Photo() {
+		
+	}
+	
+	public Photo(String url, Hotel hotel) {
+		this.url = url;
+		this.hotel = hotel;
+	}
 }
