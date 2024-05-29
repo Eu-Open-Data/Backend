@@ -15,9 +15,9 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping
-    public void addReview(@RequestBody Review review) {
-        reviewService.addReview(review);
+    @PostMapping("{token}")
+    public void addReview(@RequestBody Review review, @PathVariable String token) {
+        reviewService.addReview(review,token);
     }
 
     @DeleteMapping("/{id}")

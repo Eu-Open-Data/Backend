@@ -16,22 +16,22 @@ public class UsersController {
     }
 
     @GetMapping("{token}/firstName")
-    public String getFirstNameById(@PathVariable ("token") Long id){
-        return usersService.getFirstNameById(id);
+    public String getFirstNameByToken(@PathVariable ("token") String token){
+        return usersService.getFirstNameByToken(token);
     }
 
     @GetMapping("{token}/lastName")
-    public String getLastNameById(@PathVariable ("token") Long id){
-        return usersService.getLastNameById(id);
+    public String getLastNameByToken(@PathVariable ("token") String token){
+        return usersService.getLastNameByToken(token);
     }
 
     @GetMapping("{token}/email")
-    public String getEmailById(@PathVariable ("token") Long id){
-        return usersService.getEmailById(id);
+    public String getEmailByToken(@PathVariable ("token") String token){
+        return usersService.getEmailByToken(token);
     }
 
     @GetMapping("{token}/username")
-    public String getUsernameById(@PathVariable ("token") Long id){
-        return usersService.getUsernameById(id);
+    public String getUsernameByToken(@PathVariable ("token") String token){
+        return usersService.getUsernameByToken(token);
     }
 }
