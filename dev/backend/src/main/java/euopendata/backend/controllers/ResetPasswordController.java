@@ -1,6 +1,7 @@
 package euopendata.backend.controllers;
 
 import euopendata.backend.models.Users;
+import euopendata.backend.models.requests.ConfirmResetPassRequest;
 import euopendata.backend.models.requests.ForgotPasswordRequest;
 import euopendata.backend.services.ResetPasswordService;
 import euopendata.backend.services.UsersService;
@@ -24,9 +25,9 @@ public class ResetPasswordController {
     }
 
     @PutMapping("/confirm")
-    public ResponseEntity<String> confirmResetToken(@RequestParam("token") String token, @RequestParam("password") String password) {
+    public ResponseEntity<String> confirmResetToken(@RequestParam("token") String token, @RequestBody ConfirmResetPassRequest request) {
         String response =
-                resetPasswordService.confirmPasswordReset(token, password);
+                resetPasswordService.confirmPasswordReset(token, request.getPassword());
         return ResponseEntity.ok(response);
     }
 }
