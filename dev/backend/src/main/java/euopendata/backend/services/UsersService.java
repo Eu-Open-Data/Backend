@@ -27,6 +27,7 @@ public class UsersService implements UserDetailsService {
     private final UsersRepository usersRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final ResetPasswordTokenService resetPasswordTokenService;
+    private final JwtService jwtService;
 
 //    @Autowired
 //    public UsersService(UsersRepository usersRepository, ConfirmationTokenService confirmationTokenService) {
@@ -38,36 +39,25 @@ public class UsersService implements UserDetailsService {
 //        this.resetPasswordTokenService = resetPasswordTokenService;
 //    }
 
-    public String getEmailById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getEmailById(id);
+    public String getEmailByToken(String token) {
+
+        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
+        return user.getEmail();
     }
 
-    public String getFirstNameById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getFirstNameById(id);
+    public String getFirstNameByToken(String token) {
+        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
+        return user.getFirstName();
     }
 
-    public String getLastNameById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getLastNameById(id);
+    public String getLastNameByToken(String token) {
+        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
+        return user.getLastName();
     }
 
-    public String getUsernameById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getUsernameById(id);
+    public String getUsernameByToken(String token) {
+        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
+        return user.getUsername();
     }
 
     public Users getUserByEmail(String email) {
@@ -125,4 +115,10 @@ public class UsersService implements UserDetailsService {
     public void createResetPasswordToken(Users user, String passwordToken) {
         resetPasswordTokenService.createResetPasswordTokenForUser(user, passwordToken);
     }
+
+    public Users getUserByUsername(String s) {
+        return usersRepository.findByUsername(s).orElse(null);
+
+    }
+
 }
