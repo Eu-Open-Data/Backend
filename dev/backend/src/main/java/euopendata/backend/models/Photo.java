@@ -16,7 +16,11 @@ public class Photo {
 
     @Column(name = "url", length = Integer.MAX_VALUE)
     private String url;
-    
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private Users user;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;

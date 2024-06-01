@@ -1,13 +1,12 @@
 package euopendata.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import euopendata.backend.models.Photo;
 import euopendata.backend.services.AlbumService;
+
+import java.util.List;
 
 
 @RestController
@@ -23,5 +22,10 @@ public class AlbumController {
 	@PostMapping("/photo") 
 	public void addPhoto(@RequestBody Photo photo) {
 		albumService.addPhoto(photo);
+	}
+
+	@GetMapping("{token}/all-photos")
+	public List<Photo> getAllPhotos(@PathVariable String token) {
+		return albumService.getAllPhotosByToken(token);
 	}
 }
