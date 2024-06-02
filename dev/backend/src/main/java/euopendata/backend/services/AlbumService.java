@@ -38,6 +38,6 @@ public class AlbumService {
 	public void deletePhoto(String token, int id) {
 		String username = jwtService.extractUsername(token.replace("Bearer ", ""));
 		Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
-		albumRepository.deleteById(id);
+		albumRepository.deleteByUserIdAndId(userId,id);
 	}
 }

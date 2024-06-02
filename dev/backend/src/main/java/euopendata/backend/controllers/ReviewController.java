@@ -20,8 +20,8 @@ public class ReviewController {
         reviewService.addReview(review,token);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteReview(@PathVariable int id) {
-        reviewService.deleteReview(id);
+    @DeleteMapping("{token}/{id}")
+    public void deleteReview(@PathVariable String token,@PathVariable int id) {
+        reviewService.deleteReview(token,id);
     }
 }

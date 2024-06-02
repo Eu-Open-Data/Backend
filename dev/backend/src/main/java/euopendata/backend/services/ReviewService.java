@@ -25,7 +25,9 @@ public class ReviewService {
 
     }
 
-    public void deleteReview(int id) {
-        reviewRepository.deleteById(id);
+    public void deleteReview(String token,int id) {
+        String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+        Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
+        reviewRepository.deleteByUserIdAndId(userId,id);
     }
 }
