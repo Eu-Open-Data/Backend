@@ -19,3 +19,4 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     List<Review> findAllByUserId(Integer userId);
 }
+

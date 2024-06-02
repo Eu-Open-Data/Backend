@@ -75,5 +75,6 @@ public class AlbumService {
 					return new ResponseEntity<>("Photo updated.", HttpStatus.OK);
 				})
 				.orElseGet(() -> new ResponseEntity<>("Photo doesn't exists.", HttpStatus.NOT_FOUND));
+
 	}
 }

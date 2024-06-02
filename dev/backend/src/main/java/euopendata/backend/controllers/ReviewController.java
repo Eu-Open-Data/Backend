@@ -22,6 +22,7 @@ public class ReviewController {
         return reviewService.addReview(review,token);
     }
 
+
     @GetMapping("/all")
     public ResponseEntity<?> getAllReviews(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
@@ -32,5 +33,6 @@ public class ReviewController {
     public ResponseEntity<String> deleteReview(@RequestHeader("Authorization") String authorizationHeader, @PathVariable int id) {
         String token = authorizationHeader.replace("Bearer ", "");
         return reviewService.deleteReview(token, id);
+
     }
 }
