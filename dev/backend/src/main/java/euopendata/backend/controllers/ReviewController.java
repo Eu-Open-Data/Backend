@@ -25,8 +25,8 @@ public class ReviewController {
         reviewService.deleteReview(id);
     }
 
-    @PutMapping("/{id}")
-    public void updateReview(@PathVariable int id, @RequestBody Review review) {
-        reviewService.updateReview(id, review);
+    @PutMapping("/{user_id}/{review_id}")
+    public void updateReview(@PathVariable int user_id,@PathVariable int review_id, @RequestBody Review review) {
+        reviewService.updateReview(user_id,review_id, review);
     }
 }

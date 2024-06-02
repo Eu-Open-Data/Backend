@@ -23,10 +23,12 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public void updateReview(int id, Review reviewDetails) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No review found with id " + id + ". Cannot update review."));
-
+    public void updateReview(int user_id,int review_id, Review reviewDetails) {
+        Review review = reviewRepository.findById(review_id)
+                .orElseThrow(() -> new RuntimeException("No review found with id " + review_id + ". Cannot update review."));
+        if(review.getUserId() != user_id){
+            throw new RuntimeException("User with id " + user_id + " does not have permission to update review with id " + review_id);
+        }
         if (reviewDetails.getReviewComment() != null) {
             review.setReviewComment(reviewDetails.getReviewComment());
         }
@@ -39,5 +41,8 @@ public class ReviewService {
         if (reviewDetails.getUserId() != null) {
             review.setUserId(reviewDetails.getUserId());
         }
+
+        reviewRepository.save(review);
+
     }
 }
