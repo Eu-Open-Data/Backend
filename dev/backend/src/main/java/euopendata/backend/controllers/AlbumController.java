@@ -19,7 +19,7 @@ public class AlbumController {
 		this.albumService = albumService;
 	}
 	
-	@PostMapping("{token}") 
+	@PostMapping("/{token}") 
 	public void addPhoto(@RequestBody Photo photo, @PathVariable String token) {
 		albumService.addPhoto(photo, token);
 	}
