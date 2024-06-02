@@ -55,6 +55,11 @@ public class AlbumService {
 		if(!albumRepository.existsById(id)) {
 			return new ResponseEntity<>("Photo id doesn't exist.", HttpStatus.NOT_FOUND);
 		}
+		Photo photo=(albumRepository.findById(id)).get();
+
+		if (!photo.getUserId().equals(userId)) {
+			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+		}
 
 		albumRepository.deleteByUserIdAndId(userId,id);
 		return new ResponseEntity<>("Photo deleted successfully.", HttpStatus.OK);

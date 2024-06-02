@@ -1,5 +1,6 @@
 package euopendata.backend.services;
 
+import euopendata.backend.models.Photo;
 import euopendata.backend.models.Review;
 import euopendata.backend.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,12 @@ public class ReviewService {
         Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
         if(!reviewRepository.existsById(id)) {
             return new ResponseEntity<>("Review id doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+
+        Review review=(reviewRepository.findById(id)).get();
+
+        if (!review.getUserId().equals(userId)) {
+            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
         reviewRepository.deleteByUserIdAndId(userId,id);
