@@ -34,4 +34,10 @@ public class AlbumService {
 		Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
 		return albumRepository.findAllByUserId(userId);
 	}
+
+	public void deletePhoto(String token, int id) {
+		String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+		Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
+		albumRepository.deleteById(id);
+	}
 }

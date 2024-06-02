@@ -28,4 +28,9 @@ public class AlbumController {
 	public List<Photo> getAllPhotos(@PathVariable String token) {
 		return albumService.getAllPhotosByToken(token);
 	}
+
+	@DeleteMapping("/photo/{token}/{id}")
+	public void deletePhoto(@PathVariable String token, @PathVariable int id) {
+		albumService.deletePhoto(token, id);
+	}
 }
