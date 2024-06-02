@@ -23,7 +23,10 @@ public class AlbumService {
         this.usersService = usersService;
     }
 	
-	public void addPhoto (Photo photo) {
+	public void addPhoto (Photo photo, String token) {
+		Integer userId = Math.toIntExact(usersService.getUserByUsername(jwtService.extractUsername(token)).getId());
+		photo.setUserId(userId);
+		
 		albumRepository.save(photo);
 	}
 	public List<Photo> getAllPhotosByToken(String token) {
