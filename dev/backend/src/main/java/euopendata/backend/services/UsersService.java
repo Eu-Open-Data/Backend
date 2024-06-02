@@ -1,5 +1,7 @@
 package euopendata.backend.services;
 
+import euopendata.backend.models.Photo;
+import euopendata.backend.models.UserDTO;
 import euopendata.backend.models.Users;
 import euopendata.backend.repositories.UsersRepository;
 import euopendata.backend.security.PasswordEncoder;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.status;
@@ -38,27 +41,6 @@ public class UsersService implements UserDetailsService {
 //    public UsersService(ResetPasswordTokenService resetPasswordTokenService) {
 //        this.resetPasswordTokenService = resetPasswordTokenService;
 //    }
-
-    public String getEmailByToken(String token) {
-
-        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
-        return user.getEmail();
-    }
-
-    public String getFirstNameByToken(String token) {
-        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
-        return user.getFirstName();
-    }
-
-    public String getLastNameByToken(String token) {
-        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
-        return user.getLastName();
-    }
-
-    public String getUsernameByToken(String token) {
-        Users user = usersRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
-        return user.getUsername();
-    }
 
     public Users getUserByEmail(String email) {
         return usersRepository.findByEmail(email).orElse(null);
@@ -121,4 +103,12 @@ public class UsersService implements UserDetailsService {
 
     }
 
+    public ResponseEntity<?> getAllCredentials(String token) {
+        String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+        Integer userId = Math.toIntExact(getUserByUsername(username).getId());
+        Users user = usersRepository.getAllCredentials(userId);
+        UserDTO userDTO = new UserDTO( user.getFirstName(),user.getLastName(), user.getEmail(),user.getUsername() );
+
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
 }

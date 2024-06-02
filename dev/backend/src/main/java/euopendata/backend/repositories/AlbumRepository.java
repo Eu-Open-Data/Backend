@@ -1,5 +1,6 @@
 package euopendata.backend.repositories;
 
+
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +19,6 @@ public interface AlbumRepository extends JpaRepository<Photo, Integer> {
     @Transactional
     @Query("DELETE FROM Photo p WHERE p.userId = :userId AND p.id = :id")
     void deleteByUserIdAndId(@Param("userId") Integer userId, @Param("id") Integer id);
+
 }
+

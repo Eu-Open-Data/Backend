@@ -1,6 +1,7 @@
 package euopendata.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import euopendata.backend.models.Photo;
@@ -19,18 +20,27 @@ public class AlbumController {
 		this.albumService = albumService;
 	}
 	
-	@PostMapping("/{token}") 
-	public void addPhoto(@RequestBody Photo photo, @PathVariable String token) {
-		albumService.addPhoto(photo, token);
+	@PostMapping("/photo")
+	public ResponseEntity<String> addPhoto(@RequestBody Photo photo,@RequestHeader("Authorization") String authorizationHeader) {
+		String token = authorizationHeader.replace("Bearer ", "");
+		return albumService.addPhoto(photo,token);
 	}
 
-	@GetMapping("{token}/all-photos")
-	public List<Photo> getAllPhotos(@PathVariable String token) {
+	@GetMapping("/all-photos")
+	public ResponseEntity<?> getAllPhotos(@RequestHeader("Authorization") String authorizationHeader) {
+		String token = authorizationHeader.replace("Bearer ", "");
 		return albumService.getAllPhotosByToken(token);
 	}
 
-	@DeleteMapping("/photo/{token}/{id}")
-	public void deletePhoto(@PathVariable String token, @PathVariable int id) {
-		albumService.deletePhoto(token, id);
+	@DeleteMapping("/photo/{id}")
+	public ResponseEntity<String> deletePhoto(@RequestHeader("Authorization") String authorizationHeader, @PathVariable int id) {
+		String token = authorizationHeader.replace("Bearer ", "");
+		return albumService.deletePhoto(token, id);
+	}
+
+	@PutMapping("/photo/{id}")
+	public ResponseEntity<String> updatePhoto(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Integer id, @RequestBody Photo photo) {
+		String token = authorizationHeader.replace("Bearer ", "");
+		return albumService.updatePhoto(token, id, photo);
 	}
 }

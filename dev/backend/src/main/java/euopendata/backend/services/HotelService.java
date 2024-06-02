@@ -1,8 +1,11 @@
 package euopendata.backend.services;
 
 import euopendata.backend.models.Hotel;
+import euopendata.backend.models.Photo;
 import euopendata.backend.repositories.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +20,15 @@ public class HotelService {
         this.hotelRepository = hotelRepository;
     }
 
-    public Hotel getHotelByName(String name) {
+    public ResponseEntity<?> getHotelByName(String name) {
         boolean exists = hotelRepository.existsByName(name);
 
         if(!exists) {
-            throw new IllegalArgumentException("Hotel with name " + name + " not found");
+            return new ResponseEntity<>("Hotel doesn't exist.", HttpStatus.NOT_FOUND);
+
         }
 
-        return hotelRepository.getHotelByName(name);
+        return new ResponseEntity<>(hotelRepository.getHotelByName(name), HttpStatus.OK);
     }
 
 
@@ -32,7 +36,14 @@ public class HotelService {
         return hotelRepository.getHotelHistory();
     }
 
-    public List<Hotel> getAllHotels() {
-        return hotelRepository.getAllHotels();
+    public ResponseEntity<?> getAllHotels() {
+        List<Hotel> hotels = hotelRepository.getAllHotels();
+
+        if (hotels.isEmpty()) {
+            return new ResponseEntity<>("No hotels found.", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(hotels, HttpStatus.OK);
+        }
+
     }
 }
