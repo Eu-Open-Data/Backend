@@ -21,6 +21,8 @@ public interface HotelRepository extends JpaRepository<Hotel,Long> {
 
     @Query(value = "SELECT * FROM hotels LIMIT 30", nativeQuery = true)
     List<Hotel> getAllHotels();
-
+    
+    @Query ("SELECT h FROM Hotel h WHERE h.rating = :rating")
+    List<Hotel> getHotelsByRating (String rating);
 
 }
