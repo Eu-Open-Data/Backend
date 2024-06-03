@@ -1,5 +1,7 @@
 package euopendata.backend.services;
 
+import euopendata.backend.models.Photo;
+import euopendata.backend.models.UserDTO;
 import euopendata.backend.models.Users;
 import euopendata.backend.repositories.UsersRepository;
 import euopendata.backend.security.PasswordEncoder;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.status;
@@ -27,6 +30,7 @@ public class UsersService implements UserDetailsService {
     private final UsersRepository usersRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final ResetPasswordTokenService resetPasswordTokenService;
+    private final JwtService jwtService;
 
 //    @Autowired
 //    public UsersService(UsersRepository usersRepository, ConfirmationTokenService confirmationTokenService) {
@@ -37,38 +41,6 @@ public class UsersService implements UserDetailsService {
 //    public UsersService(ResetPasswordTokenService resetPasswordTokenService) {
 //        this.resetPasswordTokenService = resetPasswordTokenService;
 //    }
-
-    public String getEmailById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getEmailById(id);
-    }
-
-    public String getFirstNameById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getFirstNameById(id);
-    }
-
-    public String getLastNameById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getLastNameById(id);
-    }
-
-    public String getUsernameById(Long id) {
-        boolean exists = usersRepository.existsById(id);
-        if(!exists) {
-            throw new IllegalStateException("user with id " + id + " does not exist");
-        }
-        return usersRepository.getUsernameById(id);
-    }
 
     public Users getUserByEmail(String email) {
         return usersRepository.findByEmail(email).orElse(null);
@@ -124,5 +96,19 @@ public class UsersService implements UserDetailsService {
 
     public void createResetPasswordToken(Users user, String passwordToken) {
         resetPasswordTokenService.createResetPasswordTokenForUser(user, passwordToken);
+    }
+
+    public Users getUserByUsername(String s) {
+        return usersRepository.findByUsername(s).orElse(null);
+
+    }
+
+    public ResponseEntity<?> getAllCredentials(String token) {
+        String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+        Integer userId = Math.toIntExact(getUserByUsername(username).getId());
+        Users user = usersRepository.getAllCredentials(userId);
+        UserDTO userDTO = new UserDTO( user.getFirstName(),user.getLastName(), user.getEmail(),user.getUsername() );
+
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 }

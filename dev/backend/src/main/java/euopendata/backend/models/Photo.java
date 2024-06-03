@@ -16,7 +16,10 @@ public class Photo {
 
     @Column(name = "url", length = Integer.MAX_VALUE)
     private String url;
-    
+
+    @Column(name = "user_id")
+    private Integer userId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
@@ -26,8 +29,9 @@ public class Photo {
 		
 	}
 	
-	public Photo(String url, Hotel hotel) {
+	public Photo(String url, Integer userId, Hotel hotel) {
 		this.url = url;
+		this.userId = userId;
 		this.hotel = hotel;
 	}
 }

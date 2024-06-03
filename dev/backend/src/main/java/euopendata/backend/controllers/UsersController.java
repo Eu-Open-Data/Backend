@@ -2,6 +2,7 @@ package euopendata.backend.controllers;
 
 import euopendata.backend.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,23 +16,10 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @GetMapping("{token}/firstName")
-    public String getFirstNameById(@PathVariable ("token") Long id){
-        return usersService.getFirstNameById(id);
+   @GetMapping("/all-credentials")
+    public ResponseEntity<?> getAllCredentials(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        return usersService.getAllCredentials(token);
     }
 
-    @GetMapping("{token}/lastName")
-    public String getLastNameById(@PathVariable ("token") Long id){
-        return usersService.getLastNameById(id);
-    }
-
-    @GetMapping("{token}/email")
-    public String getEmailById(@PathVariable ("token") Long id){
-        return usersService.getEmailById(id);
-    }
-
-    @GetMapping("{token}/username")
-    public String getUsernameById(@PathVariable ("token") Long id){
-        return usersService.getUsernameById(id);
-    }
 }
