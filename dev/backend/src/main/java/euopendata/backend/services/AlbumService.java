@@ -1,6 +1,8 @@
 package euopendata.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import euopendata.backend.models.Photo;
@@ -22,22 +24,62 @@ public class AlbumService {
         this.jwtService = jwtService;
         this.usersService = usersService;
     }
-	
-	public void addPhoto (Photo photo, String token) {
-		Integer userId = Math.toIntExact(usersService.getUserByUsername(jwtService.extractUsername(token)).getId());
-		photo.setUserId(userId);
-		
-		albumRepository.save(photo);
+
+	public ResponseEntity<String> addPhoto(Photo photo, String token) {
+		try {
+			String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+			Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
+			photo.setUserId(userId);
+			albumRepository.save(photo);
+			return new ResponseEntity<>("Photo added successfully.", HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Photo could not be added.", HttpStatus.BAD_REQUEST);
+		}
 	}
-	public List<Photo> getAllPhotosByToken(String token) {
+	public ResponseEntity<?> getAllPhotosByToken(String token) {
 		String username = jwtService.extractUsername(token.replace("Bearer ", ""));
 		Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
-		return albumRepository.findAllByUserId(userId);
+		List<Photo> photos = albumRepository.findAllByUserId(userId);
+
+		if (photos.isEmpty()) {
+			return new ResponseEntity<>("No photos found for the user.", HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<>(photos, HttpStatus.OK);
+		}
 	}
 
-	public void deletePhoto(String token, int id) {
+	public ResponseEntity<String> deletePhoto(String token, int id) {
 		String username = jwtService.extractUsername(token.replace("Bearer ", ""));
 		Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
+
+		if(!albumRepository.existsById(id)) {
+			return new ResponseEntity<>("Photo id doesn't exist.", HttpStatus.NOT_FOUND);
+		}
+		Photo photo=(albumRepository.findById(id)).get();
+
+		if (!photo.getUserId().equals(userId)) {
+			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+		}
+
 		albumRepository.deleteByUserIdAndId(userId,id);
+		return new ResponseEntity<>("Photo deleted successfully.", HttpStatus.OK);
+
+	}
+
+	public ResponseEntity<String> updatePhoto(String token, Integer id, Photo newPhoto ) {
+		String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+		Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
+
+		return albumRepository.findById(id)
+				.map(photo -> {
+					if (!photo.getUserId().equals(userId)) {
+						return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+					}
+					photo.setUrl(newPhoto.getUrl());
+					albumRepository.save(photo);
+					return new ResponseEntity<>("Photo updated.", HttpStatus.OK);
+				})
+				.orElseGet(() -> new ResponseEntity<>("Photo doesn't exists.", HttpStatus.NOT_FOUND));
+
 	}
 }
