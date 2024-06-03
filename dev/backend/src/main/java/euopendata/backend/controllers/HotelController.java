@@ -36,9 +36,9 @@ public class HotelController {
     }
 
     @PostMapping("/history/{user_id}/{hotel_id}")
-    public void addHotelToHistory(@PathVariable Integer user_id, @PathVariable Integer hotel_id)
+    public ResponseEntity<?> addHotelToHistory(@PathVariable Integer user_id, @PathVariable Integer hotel_id)
     {
-        hotelHistoryService.addHotelToHistory(user_id, hotel_id);
+        return hotelHistoryService.addHotelToHistory(user_id, hotel_id);
     }
 
     @GetMapping("/all")
