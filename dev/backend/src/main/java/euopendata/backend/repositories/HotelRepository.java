@@ -24,4 +24,5 @@ public interface HotelRepository extends JpaRepository<Hotel,Long> {
     
     @Query ("SELECT h FROM Hotel h WHERE h.rating = :rating")
     List<Hotel> getHotelsByRating (String rating);
+
 }
