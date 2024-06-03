@@ -36,5 +36,9 @@ public class HotelController {
         return hotelService.getAllHotels();
     }
 
+    @GetMapping("/rating/{rating}")
+    public ResponseEntity<?> getHotelsByRating (@PathVariable String rating) {
+    	return hotelService.getHotelsByRating(rating);
+    }
 
 }

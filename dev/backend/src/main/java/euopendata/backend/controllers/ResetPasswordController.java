@@ -23,7 +23,7 @@ public class ResetPasswordController {
         return ResponseEntity.ok("Password reset email sent successfully.");
     }
 
-    @PutMapping("/confirm")
+    @GetMapping("/confirm")
     public ResponseEntity<String> confirmResetToken(@RequestParam("token") String token, @RequestParam("password") String password) {
         String response =
                 resetPasswordService.confirmPasswordReset(token, password);

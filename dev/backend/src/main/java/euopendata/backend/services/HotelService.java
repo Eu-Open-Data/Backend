@@ -46,4 +46,14 @@ public class HotelService {
         }
 
     }
+    
+    public ResponseEntity<?> getHotelsByRating (String rating) {
+    	List<Hotel> hotels = hotelRepository.getHotelsByRating(rating);
+    	
+    	if (hotels.isEmpty()) {
+			return new ResponseEntity<>("No hotels found with this rating.", HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<>(hotels, HttpStatus.OK);
+		}
+    }
 }
