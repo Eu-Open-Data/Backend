@@ -36,8 +36,9 @@ public class ReviewController {
 
     }
 
-    @PutMapping("/{user_id}/{review_id}")
-    public void updateReview(@PathVariable int user_id,@PathVariable int review_id, @RequestBody Review review) {
-        reviewService.updateReview(user_id,review_id, review);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateReview(@PathVariable int id, @RequestBody Review review, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        return reviewService.updateReview(token,id, review);
     }
 }

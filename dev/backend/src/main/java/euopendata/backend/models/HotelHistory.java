@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @Entity
-@Table(name="hotel_history")
+@Table(name="history")
 public class HotelHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +17,7 @@ public class HotelHistory {
     private Integer id;
     @Column(name = "user_id", nullable = false)
     private Integer userId;
-    @Column(name="hotel_id", nullable = false)
+    @Column(name="location_id", nullable = false)
     private Integer hotelId;
+    private Timestamp timestamp;
 }
