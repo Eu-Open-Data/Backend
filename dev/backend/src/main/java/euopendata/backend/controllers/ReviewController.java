@@ -41,4 +41,9 @@ public class ReviewController {
         String token = authorizationHeader.replace("Bearer ", "");
         return reviewService.updateReview(token,id, review);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getReview(@PathVariable int id) {
+        return reviewService.getReview(id);
+    }
 }
