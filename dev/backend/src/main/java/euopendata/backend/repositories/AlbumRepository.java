@@ -20,5 +20,7 @@ public interface AlbumRepository extends JpaRepository<Photo, Integer> {
     @Query("DELETE FROM Photo p WHERE p.userId = :userId AND p.id = :id")
     void deleteByUserIdAndId(@Param("userId") Integer userId, @Param("id") Integer id);
 
+
+    List<Photo> findByUserId(Integer userId);
 }
 

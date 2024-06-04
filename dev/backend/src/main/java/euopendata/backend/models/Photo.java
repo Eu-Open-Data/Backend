@@ -34,4 +34,5 @@ public class Photo {
 		this.userId = userId;
 		this.hotel = hotel;
 	}
+
 }
