@@ -3,6 +3,7 @@ package euopendata.backend.services;
 import euopendata.backend.email.EmailSender;
 import euopendata.backend.models.ResetPasswordToken;
 import euopendata.backend.models.Users;
+import euopendata.backend.models.requests.ConfirmResetPassRequest;
 import euopendata.backend.models.requests.ForgotPasswordRequest;
 import euopendata.backend.security.PasswordEncoder;
 import lombok.AllArgsConstructor;
@@ -36,12 +37,29 @@ public class ResetPasswordService {
     }
 
 
-    public String confirmPasswordReset(String token, String newPassword) {
+    public String verifyPasswordReset(String token) {
         String validateTokenRes = resetPasswordTokenService.validateResetPasswordToken(token);
         if (!validateTokenRes.equals("token valid"))
             return validateTokenRes;
 
-        Optional<ResetPasswordToken> resetToken = resetPasswordTokenService.getToken(token);
+//        Optional<ResetPasswordToken> resetToken = resetPasswordTokenService.getToken(token);
+//        Users user = resetToken.get().getUser();
+//        PasswordEncoder passwordEncoder = new PasswordEncoder(newPassword);
+//        user.setPassword(passwordEncoder.getPassword());
+//        user.setEnabled(true);
+//        usersService.updateUser(user);
+//
+//        resetPasswordTokenService.deleteToken(token); 
+        return token;
+    }
+    
+    public String resetPassword (String token, ConfirmResetPassRequest request) {
+    	String newPassword = request.getNewPassword();
+    	String confirmPassword = request.getConfirmPassword();
+    	if (!newPassword.equals(confirmPassword))
+    		return "Passwords don't match!";
+    	
+    	Optional<ResetPasswordToken> resetToken = resetPasswordTokenService.getToken(token);
         Users user = resetToken.get().getUser();
         PasswordEncoder passwordEncoder = new PasswordEncoder(newPassword);
         user.setPassword(passwordEncoder.getPassword());
@@ -49,7 +67,8 @@ public class ResetPasswordService {
         usersService.updateUser(user);
 
         resetPasswordTokenService.deleteToken(token); 
-        return "Password reset successfully.";
+    	
+    	return "Password reset successfully.";
     }
 
 }
