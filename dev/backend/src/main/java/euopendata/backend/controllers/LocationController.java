@@ -2,12 +2,10 @@ package euopendata.backend.controllers;
 
 import java.util.List;
 
+import euopendata.backend.services.HotelHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import euopendata.backend.models.Location;
 import euopendata.backend.services.LocationService;
@@ -16,11 +14,13 @@ import euopendata.backend.services.LocationService;
 @RequestMapping(path = "/location/")
 public class LocationController {
 	private final LocationService locationService;
+	private final HotelHistoryService hotelHistoryService;
 	
 	@Autowired 
-	public LocationController (LocationService locationService) {
+	public LocationController (LocationService locationService, HotelHistoryService hotelHistoryService) {
 		this.locationService = locationService;
-	}
+        this.hotelHistoryService = hotelHistoryService;
+    }
 	
 	@GetMapping("air/{airQuality}")
 	public ResponseEntity<?> filterByAirQuality (@PathVariable String airQuality) {
@@ -45,5 +45,11 @@ public class LocationController {
 	@GetMapping("water/{waterQuality}")
 	public ResponseEntity<?> filterByWaterQuality (@PathVariable String waterQuality) {
 		return locationService.getByWaterQuality(waterQuality);
+	}
+
+	@GetMapping("history")
+	public ResponseEntity<?> getLocationsHistory(@RequestHeader("Authorization") String authorizationHeader) {
+		String token = authorizationHeader.replace("Bearer ", "");
+		return hotelHistoryService.getLocationsHistory(token);
 	}
 }

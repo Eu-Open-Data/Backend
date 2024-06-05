@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -97,4 +100,17 @@ public class ReviewService {
         reviewRepository.deleteByUserIdAndId(userId,id);
         return new ResponseEntity<>("Review deleted successfully.", HttpStatus.OK);    }
 
+    public ResponseEntity<Object> getReview(int id) {
+        Optional<Review> reviewRepositoryById = reviewRepository.findById(id);
+
+        if(reviewRepositoryById.isPresent()) {
+            return ResponseEntity.ok(reviewRepositoryById.get());
+        }
+        else {
+            Map<String, String> response = new HashMap<>();
+            response.put("error","Review not found with id: " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+    }
 }
