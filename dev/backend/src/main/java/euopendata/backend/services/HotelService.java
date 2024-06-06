@@ -56,4 +56,8 @@ public class HotelService {
 			return new ResponseEntity<>(hotels, HttpStatus.OK);
 		}
     }
+
+    public Hotel getHotelById(Integer id) {
+        return hotelRepository.findById(Long.valueOf(id)).orElse(null);
+    }
 }

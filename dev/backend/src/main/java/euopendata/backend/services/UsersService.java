@@ -114,4 +114,8 @@ public class UsersService implements UserDetailsService {
 
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
+
+    public Users getUserById(Integer userId) {
+        return usersRepository.findById(Long.valueOf(userId)).orElse(null);
+    }
 }
