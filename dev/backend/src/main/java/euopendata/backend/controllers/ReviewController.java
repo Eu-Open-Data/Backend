@@ -24,9 +24,14 @@ public class ReviewController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllReviews(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> getAllReviewsByUser(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         return reviewService.getAllReviewsByToken(token);
+    }
+
+    @GetMapping("/all/{hotelId}")
+    public ResponseEntity<?> getAllReviewsByHotel(@PathVariable Integer hotelId) {
+        return reviewService.getAllReviewsByHotel(hotelId);
     }
 
     @DeleteMapping("{id}")
