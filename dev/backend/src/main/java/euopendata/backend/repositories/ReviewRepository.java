@@ -18,5 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     void deleteByUserIdAndId(@Param("userId") Integer userId, @Param("id") Integer id);
 
     List<Review> findAllByUserId(Integer userId);
+
+
+    List<Review> findAllByHotelId(Integer hotelId);
 }
 

@@ -49,6 +49,16 @@ public class ReviewService {
         }
 
     }
+    public ResponseEntity<?> getAllReviewsByHotel(Integer hotelId) {
+        List<Review> reviews = reviewRepository.findAllByHotelId(hotelId);
+
+        if (reviews.isEmpty()) {
+            return new ResponseEntity<>("No reviews found for the user.", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(reviews, HttpStatus.OK);
+        }
+
+    }
 
 
     public ResponseEntity<String> updateReview(String token, int review_id, Review reviewDetails) {
