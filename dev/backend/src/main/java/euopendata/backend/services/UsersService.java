@@ -106,6 +106,9 @@ public class UsersService implements UserDetailsService {
     public ResponseEntity<?> getAllCredentials(String token) {
         String username = jwtService.extractUsername(token.replace("Bearer ", ""));
         Integer userId = Math.toIntExact(getUserByUsername(username).getId());
+        if(usersRepository.existsById(Long.valueOf(userId)) == false){
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
         Users user = usersRepository.getAllCredentials(userId);
         UserDTO userDTO = new UserDTO( user.getFirstName(),user.getLastName(), user.getEmail(),user.getUsername() );
 
