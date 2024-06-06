@@ -17,7 +17,7 @@ public class ReviewController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addReview(@RequestBody Review review, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> addReview(@RequestBody Review review, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         return reviewService.addReview(review,token);
     }

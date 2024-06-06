@@ -1,37 +1,42 @@
 package euopendata.backend.services;
 
-import euopendata.backend.models.Review;
+import euopendata.backend.models.*;
 import euopendata.backend.repositories.ReviewRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final JwtService jwtService;
     private final UsersService usersService;
+    private final HotelService hotelService;
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, JwtService jwtService, UsersService usersService) {
+    public ReviewService(ReviewRepository reviewRepository, JwtService jwtService, UsersService usersService, HotelService hotelService) {
         this.reviewRepository = reviewRepository;
         this.jwtService = jwtService;
         this.usersService = usersService;
+        this.hotelService = hotelService;
     }
 
-    public ResponseEntity<String> addReview(Review review, String token) {
+    public ResponseEntity<?> addReview(Review review, String token) {
         try {
             String username = jwtService.extractUsername(token.replace("Bearer ", ""));
             Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
             review.setUserId(userId);
-            reviewRepository.save(review);
-            return new ResponseEntity<>("Review added successfully.", HttpStatus.CREATED);
+            Review review1 = reviewRepository.save(review);
+            Hotel hotel = hotelService.getHotelById(review.getHotel().getId());
+            review1.setHotel(hotel);
+            Users user = usersService.getUserById(userId);
+            UserDTO userDTO = new UserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
+            ReviewDTO reviewDTO = new ReviewDTO(review1, userDTO);
+            return new ResponseEntity<>(reviewDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Review could not be added.", HttpStatus.BAD_REQUEST);
         }
@@ -40,7 +45,14 @@ public class ReviewService {
     public ResponseEntity<?> getAllReviewsByToken(String token) {
         String username = jwtService.extractUsername(token.replace("Bearer ", ""));
         Integer userId = Math.toIntExact(usersService.getUserByUsername(username).getId());
-        List<Review> reviews = reviewRepository.findAllByUserId(userId);
+        List<ReviewDTO> reviews = new ArrayList<>();
+
+        for (Review review : reviewRepository.findAllByUserId(userId)) {
+            Users user = usersService.getUserByUsername(username);
+            UserDTO userDTO = new UserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
+
+            reviews.add(new ReviewDTO(review, userDTO));
+        }
 
         if (reviews.isEmpty()) {
             return new ResponseEntity<>("No reviews found for the user.", HttpStatus.NOT_FOUND);
@@ -50,7 +62,14 @@ public class ReviewService {
 
     }
     public ResponseEntity<?> getAllReviewsByHotel(Integer hotelId) {
-        List<Review> reviews = reviewRepository.findAllByHotelId(hotelId);
+        List<ReviewDTO> reviews = new ArrayList<>();
+
+        for (Review review : reviewRepository.findAllByHotelId(hotelId)) {
+            Users user = usersService.getUserById(review.getUserId());
+            UserDTO userDTO = new UserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
+
+            reviews.add(new ReviewDTO(review, userDTO));
+        }
 
         if (reviews.isEmpty()) {
             return new ResponseEntity<>("No reviews found for the user.", HttpStatus.NOT_FOUND);
@@ -113,8 +132,13 @@ public class ReviewService {
     public ResponseEntity<Object> getReview(int id) {
         Optional<Review> reviewRepositoryById = reviewRepository.findById(id);
 
+
+
         if(reviewRepositoryById.isPresent()) {
-            return ResponseEntity.ok(reviewRepositoryById.get());
+            Users user = usersService.getUserById(reviewRepositoryById.get().getUserId());
+            UserDTO userDTO = new UserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
+            ReviewDTO reviewDTO = new ReviewDTO(reviewRepositoryById.get(), userDTO);
+            return ResponseEntity.ok(reviewDTO);
         }
         else {
             Map<String, String> response = new HashMap<>();

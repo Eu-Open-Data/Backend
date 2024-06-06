@@ -22,7 +22,7 @@ public class Hotel {
     private String name;
 
     @Column(name = "rating", length = 50)
-    private Float rating;
+    private Double rating;
 
     @Column(name = "address")
     private String address;
@@ -73,7 +73,7 @@ public class Hotel {
     public Hotel() {
     }
 
-    public Hotel(String name, Float rating, String address, String description, String websiteUrl, BigDecimal latitude, BigDecimal longitude, City city, Double ratingLocation, Double ratingSleep, Double ratingRooms, Double ratingService, Double ratingValue, Double ratingCleanliness, Integer tripadvisorPriceLevel, Set<Amenity> amenities) {
+    public Hotel(String name, Double rating, String address, String description, String websiteUrl, BigDecimal latitude, BigDecimal longitude, City city, Double ratingLocation, Double ratingSleep, Double ratingRooms, Double ratingService, Double ratingValue, Double ratingCleanliness, Integer tripadvisorPriceLevel, Set<Amenity> amenities) {
         this.name = name;
         this.rating = rating;
         this.address = address;
@@ -108,11 +108,11 @@ public class Hotel {
         this.name = name;
     }
 
-    public Float getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
